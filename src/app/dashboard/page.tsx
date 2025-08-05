@@ -87,7 +87,7 @@ export default function DashboardPage() {
       : 'month';
 
   return (
-    <div className="mx-auto flex w-full max-w-[60%] flex-col gap-6 p-4 sm:p-6">
+    <div className="mx-auto flex w-full max-w-[900px] flex-col gap-6 p-4 sm:p-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
