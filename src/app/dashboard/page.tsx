@@ -2,6 +2,7 @@
 
 import { DollarSign, TrendingDown, TrendingUp, Users } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import * as React from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -10,14 +11,36 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { subDays, format } from 'date-fns';
 
-const chartData = [
+const monthlyData = [
   { month: 'January', revenue: 12345, expenses: 8765 },
   { month: 'February', revenue: 15678, expenses: 9234 },
   { month: 'March', revenue: 18901, expenses: 11456 },
   { month: 'April', revenue: 17543, expenses: 10987 },
   { month: 'May', revenue: 20345, expenses: 12345 },
   { month: 'June', revenue: 22109, expenses: 13567 },
+];
+
+const dailyData = Array.from({ length: 30 }, (_, i) => {
+  const date = subDays(new Date(), i);
+  return {
+    date: format(date, 'MMM d'),
+    revenue: Math.floor(Math.random() * 1000) + 500,
+    expenses: Math.floor(Math.random() * 600) + 300,
+  };
+}).reverse();
+
+const yearlyData = [
+  { year: '2021', revenue: 150000, expenses: 90000 },
+  { year: '2022', revenue: 180000, expenses: 110000 },
+  { year: '2023', revenue: 210000, expenses: 130000 },
 ];
 
 const chartConfig = {
@@ -32,9 +55,36 @@ const chartConfig = {
 };
 
 export default function DashboardPage() {
-  const totalRevenue = chartData.reduce((acc, item) => acc + item.revenue, 0);
-  const totalExpenses = chartData.reduce((acc, item) => acc + item.expenses, 0);
+  const totalRevenue = monthlyData.reduce(
+    (acc, item) => acc + item.revenue,
+    0
+  );
+  const totalExpenses = monthlyData.reduce(
+    (acc, item) => acc + item.expenses,
+    0
+  );
   const totalProfit = totalRevenue - totalExpenses;
+
+  const [timeframe, setTimeframe] = React.useState('monthly');
+
+  const getChartData = () => {
+    switch (timeframe) {
+      case 'daily':
+        return dailyData;
+      case 'yearly':
+        return yearlyData;
+      case 'monthly':
+      default:
+        return monthlyData;
+    }
+  };
+
+  const dataKey =
+    timeframe === 'daily'
+      ? 'date'
+      : timeframe === 'yearly'
+      ? 'year'
+      : 'month';
 
   return (
     <div className="mx-auto flex w-full max-w-[60%] flex-col gap-6 p-4 sm:p-6">
@@ -87,19 +137,32 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Financial Performance</CardTitle>
+            <Tabs
+              defaultValue="monthly"
+              value={timeframe}
+              onValueChange={setTimeframe}
+            >
+              <TabsList>
+                <TabsTrigger value="daily">Daily</TabsTrigger>
+                <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                <TabsTrigger value="yearly">Yearly</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </CardHeader>
           <CardContent className="pl-2">
             <ChartContainer config={chartConfig} className="h-[300px] w-full">
-              <BarChart accessibilityLayer data={chartData}>
+              <BarChart accessibilityLayer data={getChartData()}>
                 <CartesianGrid vertical={false} />
                 <XAxis
-                  dataKey="month"
+                  dataKey={dataKey}
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
+                  tickFormatter={(value) =>
+                    timeframe === 'monthly' ? value.slice(0, 3) : value
+                  }
                 />
                 <YAxis
                   tickFormatter={(value) => `$${Number(value) / 1000}k`}
