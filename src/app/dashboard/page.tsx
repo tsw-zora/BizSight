@@ -37,12 +37,12 @@ export default function DashboardPage() {
   const totalProfit = totalRevenue - totalExpenses;
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6">
+    <div className="mx-auto flex w-full max-w-[60%] flex-col gap-6 p-4 sm:p-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <TrendingUp className="h-6 w-6 text-muted-foreground" />
+            <TrendingUp className="h-8 w-8 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -58,7 +58,7 @@ export default function DashboardPage() {
             <CardTitle className="text-sm font-medium">
               Total Expenses
             </CardTitle>
-            <TrendingDown className="h-6 w-6 text-muted-foreground" />
+            <TrendingDown className="h-8 w-8 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -72,7 +72,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Profit</CardTitle>
-            <DollarSign className="h-6 w-6 text-muted-foreground" />
+            <DollarSign className="h-8 w-8 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
